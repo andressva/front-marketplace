@@ -1,8 +1,10 @@
+import 'antd/dist/antd.css'
+import Home from './containers/Home'
+import Login from './containers/Login'
+
 const App = () => {
   return (
-    <div className="App">
-      <h1>Marketplace</h1>   
-    </div>
+      <Login />
   );
 }
 
