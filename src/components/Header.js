@@ -1,16 +1,19 @@
-import React, { useState, useContext } from 'react'
-import { Image, Layout, Avatar, Col } from 'antd'
+import React, { useContext } from 'react'
+import { Layout, Avatar, Col } from 'antd'
 import styles from '../styles/components/Header.module.css'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import logo from '../assets/logo.svg'
 import { UserOutlined } from '@ant-design/icons';
 import { MarketContext } from '../context'
 
 const Header = () => {
+    let history = useHistory()
     const { user } = useContext(MarketContext)
     return (
        <Layout.Header className={styles.container}>
-         <Image
+         <img
+          onClick={() => { history.push('/') }}
+          style={{cursor: 'pointer'}}
           width={200}
           src={logo}
         />

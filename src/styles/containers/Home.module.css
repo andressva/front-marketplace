@@ -1,0 +1,17 @@
+.container{
+  display: flex;
+  height: 100%;
+  background-color: white;
+}
+
+.leftColumn{
+  width: 20%;
+  background-color: rgb(132, 89, 233);
+  height: 100%;
+}
+
+.rightColumn{
+  width: 80%;
+  height: 100%;
+  padding: 24px;
+}

@@ -15,7 +15,6 @@ const AppNavigator = () => {
   const [ routes, setRoutes ] = useState(routesComponents[role])
 
   useEffect(() => {
-    console.log(role)
     setRoutes(routesComponents[role])
   })
 
