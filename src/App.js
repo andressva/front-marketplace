@@ -1,10 +1,18 @@
 import 'antd/dist/antd.css'
-import Home from './containers/Home'
-import Login from './containers/Login'
+import { MarketProvider } from './context'
+import AppNavigator from './containers/AppNavigator'
+import {
+  BrowserRouter as Router,
+} from "react-router-dom";
 
 const App = () => {
+
   return (
-      <Login />
+      <MarketProvider>
+        <Router>
+          <AppNavigator />
+        </Router>
+      </MarketProvider>
   );
 }
 

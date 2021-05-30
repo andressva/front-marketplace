@@ -1,6 +1,8 @@
-import React from 'react'
-import { Row, Card, Form, Input, Button } from 'antd'
+import React, { useState, useContext } from 'react'
+import { Row, Card, Form, Input, Button, Alert } from 'antd'
+import { useHistory } from "react-router-dom"
 import styles from '../styles/components/LoginForm.module.css'
+import { MarketContext } from '../context'
 
 const CardTitle = () => (
   <Row className={styles.titleWrap} >
@@ -9,11 +11,24 @@ const CardTitle = () => (
   </Row>
 )
 
-const handleSubmit = (values) => {
-  console.log(values)
-}
-
 const LoginForm = () => {
+  let history = useHistory();
+  const { requesting, handleLogin } = useContext(MarketContext)
+  const [ showAlert, setShowAlert ] = useState(false)
+  const [ msgAlert, setMsgAlert ] = useState('')
+
+  const handleSubmit = async (values) => {
+    const resp = await handleLogin(values)  
+    if(resp){
+      setMsgAlert('Inicio de sesion exitoso!')
+      setShowAlert(true)
+      history.push('/')
+    } else{
+      setMsgAlert('ALgo salio mal!')
+      setShowAlert(true)
+    }
+  }
+  
   return (
     <Card className={styles.container} title={<CardTitle />}>
       <Form
@@ -39,11 +54,19 @@ const LoginForm = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button className={styles.btn} type="primary" htmlType="submit" block>
-            Inicio de sesion
-          </Button>
+          {requesting ? (
+            <Button className={styles.btn} type="primary" htmlType="submit" block loading>
+              Cargando...
+            </Button>
+          ) : (
+            <Button className={styles.btn} type="primary" htmlType="submit" block>
+              Inicio de sesion
+            </Button>
+          )}
+          
         </Form.Item>
       </Form>
+      { showAlert && <Alert message={msgAlert} type="success" /> }
     </Card>
   )
 }

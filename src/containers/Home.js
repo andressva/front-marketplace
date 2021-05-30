@@ -1,10 +1,18 @@
 import React from 'react'
+import { Layout } from 'antd'
+
+// Components
+import Header from '../components/Header' 
 
 const Home = () => {
     return (
-        <div>
-            <h1>Home</h1>
-        </div>
+        <Layout style={{height: '100vh'}}>
+            <Header/>
+            <Layout.Content>
+                Content
+            </Layout.Content>
+            <Layout.Footer>Footer</Layout.Footer>
+        </Layout>
     )
 }
 
