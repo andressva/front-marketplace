@@ -45,7 +45,6 @@ const ProductReviews = ({product}) => {
   useEffect(async () => {
     const data = await getProductReview({ id: product.idProducto})
     const tempReviews = [...reviews]
-    console.log(data)
     if(data.data.length > 0){
       data.data.forEach(q => {
         const userQuest = q.usuario.correo

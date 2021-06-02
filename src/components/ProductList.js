@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { Card, List } from 'antd'
 import styles from '../styles/components/ProductList.module.css'
 import { useHistory } from 'react-router-dom'
 import { loadProducts } from '../services/index'
 import imgDefault from '../assets/no-image.png'
+import { MarketContext } from '../context'
 
-const Header = () => {
+const ProductList = () => {
     let history = useHistory() 
+    const { filters } = useContext(MarketContext)
     const [ products, setProducts ] = useState([])
     const [ requesting, setRequesting ] = useState(true)
 
@@ -38,10 +40,15 @@ const Header = () => {
             sm: 2,
             md: 4,
             lg: 4,
-            xl: 6,
-            xxl: 6,
+            xl: 5,
+            xxl: 5,
           }}
-          dataSource={products}
+          dataSource={products.filter(p => {
+            return filters ? 
+              (filters.categories.length > 0 ? filters.categories.includes(p.idCategoria) : true) &&
+              (filters.stores.length > 0 ? filters.stores.includes(p.idTienda) : true) 
+            : true   
+          })}
           renderItem={item => (
             <List.Item>
               <Card
@@ -69,4 +76,4 @@ const Header = () => {
     )
 }
 
-export default Header
+export default ProductList

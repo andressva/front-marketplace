@@ -35,7 +35,6 @@ export const getProduct = ({id}) => {
   return new Promise((resolve, reject) => {
     axiosHttp.get(`/producto/P/${id}`)
       .then(resp => {
-        console.log(resp)
         resolve({ status: true, data: resp.data.objResponse || {}})
       })
       .catch(err => {
@@ -59,6 +58,30 @@ export const getProductQuestions = ({id}) => {
 export const getProductReview = ({id}) => {
   return new Promise((resolve, reject) => {
     axiosHttp.get(`/resena/${id}`)
+      .then(resp => {
+        resolve({ status: true, data: resp.data.objResponse || {}})
+      })
+      .catch(err => {
+        reject({ status: false, data: err })
+      })
+  })
+}
+
+export const getCategories = () => {
+  return new Promise((resolve, reject) => {
+    axiosHttp.get(`/cat`)
+      .then(resp => {
+        resolve({ status: true, data: resp.data.objResponse || {}})
+      })
+      .catch(err => {
+        reject({ status: false, data: err })
+      })
+  })
+}
+
+export const getStores = () => {
+  return new Promise((resolve, reject) => {
+    axiosHttp.get(`/tienda`)
       .then(resp => {
         resolve({ status: true, data: resp.data.objResponse || {}})
       })

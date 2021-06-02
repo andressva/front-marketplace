@@ -19,7 +19,6 @@ const Product = () => {
   useEffect(async () => {
     const {status, data} = await getProduct({id})
     if(status){
-      console.log(data)
       setProduct(data[0])
     }
     setRequesting(false)

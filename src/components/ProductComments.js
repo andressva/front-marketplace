@@ -19,12 +19,11 @@ const CommentList = ({ comments }) => (
 
 const Editor = ({ onChange, onSubmit, submitting, value, isLogin, user}) => (
   <Form className={styles.formComment}>
-    {console.log(user)}
     <Form.Item>
       <TextArea rows={4} onChange={onChange} value={value} />
     </Form.Item>
     <Form.Item>
-      <Button disabled={!(isLogin)} htmlType="submit" loading={submitting} onClick={onSubmit} type="primary">
+      <Button disabled={!isLogin} htmlType="submit" loading={submitting} onClick={onSubmit} type="primary">
         Preguntar
       </Button>
     </Form.Item>
@@ -88,8 +87,7 @@ const ProductComments = ({product}) => {
             onSubmit={handleSubmit}
             submitting={submitting}
             value={value}
-            isLogin
-            user
+            isLogin={isLogin}
           />
         }
       />

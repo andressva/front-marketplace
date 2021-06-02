@@ -10,22 +10,17 @@ const MarketContext = React.createContext()
 const MarketProvider = (props) => {
   const [ role, setRole ] = useLocalStorage('sesion_role', ROLES.CLIENT)
   const [ user, setUser ] = useLocalStorage('sesion_user', {})
-  const [ isLogin, setIsLogin ] = useState(false)
+  const [ isLogin, setIsLogin ] = useLocalStorage('sesion_login', false)
   const [ requesting, setRequesting ] = useState(false)
   const [ itemsCart, setItemsCart ] = useLocalStorage('sesion_items_cart', [])
-
-  useEffect(() => {
-    console.log(user)
-  }, [user])
+  const [ filters, setFilters ] = useState({ categories: [], stores: [] })
 
   const handleLogin = (data) => {
     setRequesting(true)
     return new Promise((resolve, reject) => {
       login({ correo: data.email, clave: data.password })
         .then((resp) => {
-          console.log(resp)
           const tempRole = arrRoles[resp.data.objResponse.rol]
-          console.log(resp.data.objResponse.correo)
           setUser({email: resp.data.objResponse.correo})
           setIsLogin(true)
           setRole(tempRole)
@@ -56,6 +51,10 @@ const MarketProvider = (props) => {
     })
   }
 
+  const handleFilters = (ftrs) => {
+    setFilters({...filters, ...ftrs})
+  }
+
   return (
     <MarketContext.Provider value={{
       user,
@@ -63,6 +62,8 @@ const MarketProvider = (props) => {
       itemsCart,
       requesting,
       isLogin,
+      filters,
+      handleFilters,
       handleLogin,
       addItemToCart,
       removeItemFromCart

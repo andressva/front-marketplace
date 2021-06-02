@@ -6,6 +6,7 @@ import styles from '../styles/containers/Home.module.css'
 import Header from '../components/Header' 
 import Footer from '../components/Footer' 
 import ProductList from '../components/ProductList'
+import Filters from '../components/Filters.js'
 
 const Home = () => {
     return (
@@ -13,7 +14,7 @@ const Home = () => {
             <Header/>
             <Layout.Content className={styles.container}>
                 <div className={styles.leftColumn}>
-                    <h2>Filtros</h2>
+                    <Filters />
                 </div>
                 <div className={styles.rightColumn}>
                     <ProductList/>
