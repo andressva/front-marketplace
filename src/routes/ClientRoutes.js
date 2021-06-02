@@ -8,6 +8,7 @@ import {
 import Home from '../containers/Home'
 import Login from '../containers/Login'
 import Product from '../containers/Product'
+import CartStore from '../containers/CartStore'
 
 export const clientRoutes = [
   {
@@ -19,6 +20,11 @@ export const clientRoutes = [
     path: '/product/:id',
     name: 'Product Detail',
     component: <Product />,
+  },
+  {
+    path: '/cart-store',
+    name: 'CartStore',
+    component: <CartStore />,
   },
   {
     path: '/',

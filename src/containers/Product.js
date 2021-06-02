@@ -7,6 +7,9 @@ import { getProduct } from '../services/index'
 // Components
 import Header from '../components/Header' 
 import Footer from '../components/Footer' 
+import ProductDetail from '../components/ProductDetail'
+import ProductComments from '../components/ProductComments'
+import ProductReviews from '../components/ProductReviews'
 
 const Product = () => {
   let { id } = useParams()
@@ -16,6 +19,7 @@ const Product = () => {
   useEffect(async () => {
     const {status, data} = await getProduct({id})
     if(status){
+      console.log(data)
       setProduct(data[0])
     }
     setRequesting(false)
@@ -29,11 +33,9 @@ const Product = () => {
               <h3>cargando...</h3>
             ) : id ? (
               <div className={styles.detailsContainer}>
-                <Row className={styles.rowDetails}>
-                  <Col span={14} className={styles.imageWrap}></Col>
-                  <Col span={10} className={styles.details} ></Col>
-                </Row>
-                <Row></Row>
+                <ProductDetail product={product} />
+                <ProductReviews product={product} />
+                <ProductComments product={product} />
               </div>
             ) : (
               <h3>No ha seleccionado Producto!</h3>

@@ -9,20 +9,7 @@
   background-color:white;
   border-radius: 10px;
   display: flex;
-}
-
-.rowDetails{
-  height: 300px;
-}
-
-.imageWrap{
-  width: 100%;
-  height: 100%;
-  background-color: antiquewhite;
-}
-
-.details{
-  width: 100%;
-  height: 100%;
-  background-color: aquamarine;
+  flex-direction: column;
+  padding: 50px;
+  overflow-y: scroll;
 }

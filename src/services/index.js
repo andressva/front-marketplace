@@ -20,8 +20,9 @@ export const login = ({ correo, clave }) => {
 
 export const loadProducts = () => {
   return new Promise((resolve, reject) => {
-    axiosHttp.get('/producto/T/1')
+    axiosHttp.get('/producto/A/0')
       .then(resp => {
+        console.log(resp)
         resolve({ status: true, data: resp.data.objResponse || []})
       })
       .catch(err => {
@@ -33,6 +34,31 @@ export const loadProducts = () => {
 export const getProduct = ({id}) => {
   return new Promise((resolve, reject) => {
     axiosHttp.get(`/producto/P/${id}`)
+      .then(resp => {
+        console.log(resp)
+        resolve({ status: true, data: resp.data.objResponse || {}})
+      })
+      .catch(err => {
+        reject({ status: false, data: err })
+      })
+  })
+}
+
+export const getProductQuestions = ({id}) => {
+  return new Promise((resolve, reject) => {
+    axiosHttp.get(`/pregunta/${id}`)
+      .then(resp => {
+        resolve({ status: true, data: resp.data.objResponse || {}})
+      })
+      .catch(err => {
+        reject({ status: false, data: err })
+      })
+  })
+}
+
+export const getProductReview = ({id}) => {
+  return new Promise((resolve, reject) => {
+    axiosHttp.get(`/resena/${id}`)
       .then(resp => {
         resolve({ status: true, data: resp.data.objResponse || {}})
       })
