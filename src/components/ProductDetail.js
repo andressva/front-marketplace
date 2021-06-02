@@ -28,7 +28,7 @@ const ProductDetail = ({product}) => {
 
   useEffect(() => {
     if(itemsCart){
-      const _inCart = itemsCart.some(i => i.product.idProduct == product.idProduct)
+      const _inCart = itemsCart.some(i => i.product.idProducto == product.idProducto)
       setInCart(_inCart)
     }
   }, [])

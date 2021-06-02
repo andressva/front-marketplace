@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { login } from './services'
+import { login, getCategories, getStores } from './services'
 import { ROLES } from './constants'
 import { useLocalStorage } from './hooks/useLocalStorage'
 
@@ -11,9 +11,30 @@ const MarketProvider = (props) => {
   const [ role, setRole ] = useLocalStorage('sesion_role', ROLES.CLIENT)
   const [ user, setUser ] = useLocalStorage('sesion_user', {})
   const [ isLogin, setIsLogin ] = useLocalStorage('sesion_login', false)
-  const [ requesting, setRequesting ] = useState(false)
+  const [ requesting, setRequesting ] = useState(true)
   const [ itemsCart, setItemsCart ] = useLocalStorage('sesion_items_cart', [])
   const [ filters, setFilters ] = useState({ categories: [], stores: [] })
+  const [ categories, setCategories ] = useState([])
+  const [ stores, setStores ] = useState([])
+
+  useEffect( async () => {
+    const fetchData = async () => {
+      const respCtg = await getCategories()
+      if(respCtg.status){
+        const catgs = respCtg.data
+        setCategories(catgs)
+      }
+  
+      const respStrs = await getStores()
+      if(respStrs.status){
+        const strs = respStrs.data
+        setStores(strs)
+      }
+    }
+
+    await fetchData()
+    setRequesting(false)
+  }, [])
 
   const handleLogin = (data) => {
     setRequesting(true)
@@ -60,6 +81,8 @@ const MarketProvider = (props) => {
       user,
       role,
       itemsCart,
+      categories,
+      stores,
       requesting,
       isLogin,
       filters,

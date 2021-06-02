@@ -5,27 +5,7 @@ import { getCategories, getStores } from '../services/index'
 import { MarketContext } from '../context'
 
 const Filters = () => {
-  const { handleFilters } = useContext(MarketContext)
-  const [ categories, setCategories ] = useState([])
-  const [ stores, setStores ] = useState([])
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const respCtg = await getCategories()
-      if(respCtg.status){
-        const catgs = respCtg.data
-        setCategories(catgs)
-      }
-  
-      const respStrs = await getStores()
-      if(respStrs.status){
-        const strs = respStrs.data
-        setStores(strs)
-      }
-    }
-
-    fetchData()
-  }, [])
+  const { categories, stores, handleFilters } = useContext(MarketContext)
 
   const handleCategoriesChange = (value) => {
     handleFilters({ categories: value })

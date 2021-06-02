@@ -2,13 +2,13 @@ import React, { useState, useEffect, useContext } from 'react'
 import { Card, List } from 'antd'
 import styles from '../styles/components/ProductList.module.css'
 import { useHistory } from 'react-router-dom'
-import { loadProducts } from '../services/index'
+import { loadProducts, getCategories, getStores } from '../services/index'
 import imgDefault from '../assets/no-image.png'
 import { MarketContext } from '../context'
 
 const ProductList = () => {
     let history = useHistory() 
-    const { filters } = useContext(MarketContext)
+    const { filters, categories, stores } = useContext(MarketContext)
     const [ products, setProducts ] = useState([])
     const [ requesting, setRequesting ] = useState(true)
 
@@ -54,6 +54,7 @@ const ProductList = () => {
               <Card
                 onClick={() => handleViewProduct(item)}
                 className={styles.item}
+                bodyStyle={{padding: '10px', display: 'flex', flexDirection: 'column'}}
                 cover={
                   <img
                     alt={item.nombre}
@@ -61,10 +62,10 @@ const ProductList = () => {
                   />
                 } 
               >
-                <Card.Meta
-                  title={<span>{item.nombre}</span>}
-                  description={item.precio}
-                />
+                <span className={styles.itemName}>{item.nombre.toLowerCase()}</span>
+                <span className={styles.itemPrice}>${item.precio}</span>
+                <span className={styles.itemCategory}>{categories.find(c => c.idCategoria == item.idCategoria).nombre.toLowerCase()}</span>
+                <span className={styles.itemStore}>{stores.find(s => s.idTienda == item.idTienda).nombre}</span>
               </Card>
             </List.Item>
           )}
