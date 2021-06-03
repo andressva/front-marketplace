@@ -55,6 +55,20 @@ const MarketProvider = (props) => {
     })
   }
 
+  const handleLogout = () => {
+    setRequesting(true)
+    return new Promise((resolve, reject) => {
+      setUser({})
+      setIsLogin(false)
+      setRole(ROLES.CLIENT)
+      setItemsCart([])
+      setTimeout(() => {
+        setRequesting(false)
+        resolve(true)
+      }, 2000)
+    })
+  }
+
   const addItemToCart = ({ product, amount }) => {
     return new Promise(resolve => {
       const tempItems = [...itemsCart]
@@ -89,6 +103,7 @@ const MarketProvider = (props) => {
       filters,
       handleFilters,
       handleLogin,
+      handleLogout,
       addItemToCart,
       removeItemFromCart
     }}>

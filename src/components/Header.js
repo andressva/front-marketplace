@@ -8,7 +8,8 @@ import { MarketContext } from '../context'
 
 const Header = () => {
     let history = useHistory()
-    const { user, isLogin, itemsCart } = useContext(MarketContext)
+    const { user, isLogin, itemsCart, handleLogout } = useContext(MarketContext)
+
     return (
        <Layout.Header className={styles.container}>
          <img
@@ -18,11 +19,16 @@ const Header = () => {
           src={logo}
         />
         <div style={{display: 'flex'}}>
-          {user.email ? (
-            <Col>
-              <span style={{marginRight: '20px'}} >{user.email}</span>
-              <Avatar style={{backgroundColor: "#FFCE22"}} size={38} icon={<UserOutlined />} />
-            </Col>
+          {isLogin && user.email ? (
+            <div className={styles.userWrap}>
+              <div className={styles.userLabels}>
+                <span className={styles.userEmail}>{user.email}</span>
+                <span onClick={handleLogout} className={styles.userLogout} >cerrar sesion</span>
+              </div>
+              <div className={styles.userAvatar}>
+                <Avatar style={{backgroundColor: "#FFCE22"}} size={38} icon={<UserOutlined />} />
+              </div>
+            </div>
           ) : (
             <Col>
               <Link style={{marginRight: '20px'}} to="/login">Iniciar sesión</Link>
