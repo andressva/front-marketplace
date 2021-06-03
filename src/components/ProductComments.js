@@ -123,7 +123,7 @@ const ProductComments = ({product}) => {
 
   return (
     <Row className={styles.rowComments}>
-    {comments.length > 0 && <CommentList handleShowForm={handleShowForm} showForm={showForm} comments={comments} />}
+    {comments.length >= 0 && <CommentList handleShowForm={handleShowForm} showForm={showForm} comments={comments} />}
     {showForm && (
       <Comment
         className={styles.commentWrap}

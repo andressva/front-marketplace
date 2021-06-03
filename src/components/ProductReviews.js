@@ -3,7 +3,7 @@ import styles from '../styles/components/ProductReviews.module.css'
 import { Row, Rate , Comment, Avatar, Form, Button, List, Input } from 'antd';
 import imageDefault from '../assets/no-image-xl.png'
 import { PlusOutlined, UserOutlined, CloseOutlined } from '@ant-design/icons';
-import { getProductReview } from '../services/index'
+import { getProductReview, postReview } from '../services/index'
 import { MarketContext } from '../context'
 
 const { TextArea } = Input 
@@ -75,24 +75,35 @@ const ProductReviews = ({product}) => {
 
   }, [])
 
-  const handleSubmit = (values) => {
+  const handleSubmit = async (values) => {
     if(isLogin && user.email){
       console.log(values)
       console.log(user)
       console.log(product)
+
+      const body = {
+        "producto": {
+          "idProducto": product.idProducto
+        },
+        "calificacion": values.rate,
+        "resena": values.review,
+        "usuario": {
+            "correo": user.email
+        }
+      }
+
+      const resp = await postReview(body)
+      if(resp){
+        setReviews([...reviews, { 
+          author: user.email,
+          avatar: <Avatar style={{backgroundColor: "#FFCE22"}} size={32} icon={<UserOutlined />} />,
+          content: <Review review={{calificacion: values.rate, resena: values.review}} />,
+        }])
+        setValue('')
+        setShowForm(false)
+      }
+
     }
-    // if(isLogin && user.email){
-    //   const questionData = {
-    //     usuarioPreg: user.email,
-    //     pregunta: value,
-    //   }
-    //   setReviews([...reviews, { 
-    //     author: user.email,
-    //     avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-    //     content: <p>{value}</p>,
-    //   }])
-    //   setValue('')
-    // }
   }
 
   const handleShowForm = () => {
@@ -105,7 +116,7 @@ const ProductReviews = ({product}) => {
 
   return (
     <Row className={styles.rowReviews}>
-    {reviews.length > 0 && <CommentList handleShowForm={handleShowForm} showForm={showForm} reviews={reviews} />}
+    {reviews.length >= 0 && <CommentList handleShowForm={handleShowForm} showForm={showForm} reviews={reviews} />}
     {showForm && (
       <Comment
         className={styles.reviewsWrap}

@@ -45,8 +45,10 @@ const MarketProvider = (props) => {
           setUser({email: resp.data.objResponse.correo})
           setIsLogin(true)
           setRole(tempRole)
-          setRequesting(false)
-          resolve(true)
+          setTimeout(() => {
+            setRequesting(false)
+            resolve(true)
+          }, 2000)
         })
         .catch(() => {
           setRequesting(false)

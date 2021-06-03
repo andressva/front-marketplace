@@ -90,3 +90,15 @@ export const getStores = () => {
       })
   })
 }
+
+export const postReview = (body) => {
+  return new Promise((resolve, reject) => {
+    axiosHttp.post(`/resena`, body)
+      .then(resp => {
+        resolve({ status: true, data: resp.data.objResponse || {}})
+      })
+      .catch(err => {
+        reject({ status: false, data: err })
+      })
+  })
+}
