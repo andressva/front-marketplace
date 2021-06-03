@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Layout, Avatar, Col } from 'antd'
+import { Layout, Avatar, Col, Badge } from 'antd'
 import styles from '../styles/components/Header.module.css'
 import { Link, useHistory } from 'react-router-dom'
 import logo from '../assets/logo.svg'
@@ -8,7 +8,7 @@ import { MarketContext } from '../context'
 
 const Header = () => {
     let history = useHistory()
-    const { user } = useContext(MarketContext)
+    const { user, isLogin, itemsCart } = useContext(MarketContext)
     return (
        <Layout.Header className={styles.container}>
          <img
@@ -21,7 +21,7 @@ const Header = () => {
           {user.email ? (
             <Col>
               <span style={{marginRight: '20px'}} >{user.email}</span>
-              <Avatar style={{backgroundColor: "#348FD9"}} size={38} icon={<UserOutlined />} />
+              <Avatar style={{backgroundColor: "#FFCE22"}} size={38} icon={<UserOutlined />} />
             </Col>
           ) : (
             <Col>
@@ -29,11 +29,15 @@ const Header = () => {
               <Avatar size={38} icon={<UserOutlined />} />
             </Col>
           )}
-          <Col style={{marginLeft: '30px'}}>
-            <Link to="/cart-store" >
-              <Avatar style={{cursor: 'pointer', backgroundColor: '#348FD9'}} size={38} icon={<ShoppingCartOutlined /> } />
-            </Link>
-          </Col>
+          {isLogin && (
+            <Col style={{marginLeft: '30px'}}>
+              <Link to="/cart-store" >
+                <Badge count={itemsCart.length}>
+                  <Avatar style={{cursor: 'pointer', backgroundColor: '#348FD9'}} shape="circle" icon={<ShoppingCartOutlined />} />
+                </Badge>
+              </Link>
+            </Col>
+          )}
         </div>
        </Layout.Header>
     )

@@ -5,8 +5,8 @@
 }
 
 .leftColumn{
-  width: 30%;
-  min-width: 400px;
+  width:25%;
+  min-width: 350px;
   height: 100%;
 }
 
@@ -14,5 +14,6 @@
   width: 80%;
   height: 100%;
   padding: 24px;
+  padding-right: 50px;
   overflow-y: scroll;
 }

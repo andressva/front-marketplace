@@ -11,12 +11,16 @@ const routesComponents = {
 }
 
 const AppNavigator = () => {
-  const { role } = useContext(MarketContext)
+  const { role, requesting } = useContext(MarketContext)
   const [ routes, setRoutes ] = useState(routesComponents[role])
 
   useEffect(() => {
     setRoutes(routesComponents[role])
   })
+
+  if(requesting){
+    return <><h1>Cargando...</h1></>
+  }
 
   return (
     <>

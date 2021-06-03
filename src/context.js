@@ -58,15 +58,16 @@ const MarketProvider = (props) => {
   const addItemToCart = ({ product, amount }) => {
     return new Promise(resolve => {
       const tempItems = [...itemsCart]
-      tempItems.push({product, amount})
-      setItemsCart(tempItems)
+      const _tempItems = tempItems.filter(i => i.product.idProducto != product.idProducto)
+      _tempItems.push({product, amount})
+      setItemsCart(_tempItems)
       resolve(true)
     })
   }
 
   const removeItemFromCart = ({ id }) => {
     return new Promise(resolve => {
-      const tempItems = itemsCart.filter(i => i.product.idProduct != id)
+      const tempItems = itemsCart.filter(i => i.product.idProducto != id)
       setItemsCart(tempItems)
       resolve(true)
     })

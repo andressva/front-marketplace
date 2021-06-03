@@ -31,7 +31,7 @@ const Filters = () => {
               <>
                 {categories.map((catg) => (
                   <Checkbox key={catg.idCategoria} className={styles.checkbox} value={catg.idCategoria}>
-                    {catg.nombre}
+                    <span style={{fontSize: "12px"}} >{catg.nombre}</span>
                   </Checkbox>
                 ))}
               </>
@@ -47,7 +47,7 @@ const Filters = () => {
               <>
                 {stores.map((str) => (
                   <Checkbox key={str.idTienda} className={styles.checkbox} value={str.idTienda}>
-                    {str.nombre}
+                    <span style={{fontSize: "12px"}} >{str.nombre}</span>
                   </Checkbox>
                 ))}
               </>

@@ -1,8 +1,8 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { Row, Col, Button, InputNumber, Form } from 'antd'
 import styles from '../styles/components/ProductDetail.module.css'
-import imageDefault from '../assets/no-image-xl.png'
 import { MarketContext } from '../context'
+const images = require.context('../../public/images', true)
 
 const ProductDetail = ({product}) => {
   const { isLogin, itemsCart, addItemToCart, removeItemFromCart } = useContext(MarketContext)
@@ -12,7 +12,7 @@ const ProductDetail = ({product}) => {
   const handleAddToCart = (value) => {
     setAddingToCart(true)
     if(inCart){
-      removeItemFromCart({id: product.idProduct}).then(() => {
+      removeItemFromCart({id: product.idProducto}).then(() => {
           setInCart(false)
           setAddingToCart(false)
         }
@@ -36,7 +36,7 @@ const ProductDetail = ({product}) => {
   return (
     <Row className={styles.rowDetails}>
       <Col span={14} className={styles.imageWrap}>
-        <img width="320" src={imageDefault} />
+        <img width="320" src={`${process.env.PUBLIC_URL}/images/${product.foto.urlFoto != "" ? product.foto.urlFoto : "no-image-xl.png" }`} />
       </Col>
       <Col span={10} className={styles.details} >
         <div>
@@ -48,7 +48,7 @@ const ProductDetail = ({product}) => {
           <Form
           className={styles.formAddToCart}
           name="cart"
-          initialValues={{ amount: true }}
+          initialValues={{ amount: 1 }}
           onFinish={handleAddToCart}
         >
           {!inCart && (

@@ -56,10 +56,7 @@ const ProductList = () => {
                 className={styles.item}
                 bodyStyle={{padding: '10px', display: 'flex', flexDirection: 'column'}}
                 cover={
-                  <img
-                    alt={item.nombre}
-                    src={imgDefault}
-                  />
+                  <img width="320" src={`${process.env.PUBLIC_URL}/images/${item.foto.urlFoto != "" ? item.foto.urlFoto : "no-image.png" }`} />
                 } 
               >
                 <span className={styles.itemName}>{item.nombre.toLowerCase()}</span>
