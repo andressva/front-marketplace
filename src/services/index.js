@@ -102,3 +102,15 @@ export const postReview = (body) => {
       })
   })
 }
+
+export const postQuestion = (body) => {
+  return new Promise((resolve, reject) => {
+    axiosHttp.post(`/pregunta`, body)
+      .then(resp => {
+        resolve({ status: true, data: resp.data.objResponse || {}})
+      })
+      .catch(err => {
+        reject({ status: false, data: err })
+      })
+  })
+}

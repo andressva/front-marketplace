@@ -77,10 +77,6 @@ const ProductReviews = ({product}) => {
 
   const handleSubmit = async (values) => {
     if(isLogin && user.email){
-      console.log(values)
-      console.log(user)
-      console.log(product)
-
       const body = {
         "producto": {
           "idProducto": product.idProducto

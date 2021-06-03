@@ -3,7 +3,7 @@ import styles from '../styles/components/ProductComment.module.css'
 import { Row, Col, Comment, Avatar, Form, Button, List, Input } from 'antd';
 import imageDefault from '../assets/no-image-xl.png'
 import { UserOutlined, CloseOutlined, PlusOutlined } from '@ant-design/icons';
-import { getProductQuestions } from '../services/index'
+import { getProductQuestions, postQuestion } from '../services/index'
 import { MarketContext } from '../context'
 
 const { TextArea } = Input 
@@ -36,15 +36,17 @@ const CommentList = ({ comments, handleShowForm, showForm }) => (
               <p>{item.question.content}</p>
             }
           >
-            <Comment
-              author={item.answer.auhtor}
-              avatar={
-                <Avatar style={{backgroundColor: "#3DCF5D"}} size={32} icon={<UserOutlined />} />
-              }
-              content={
-                <p>{item.answer.content}</p>
-              }
-            />
+            {item.answer.author == "null" ? <></> : (
+              <Comment
+                  author={item.answer.auhtor}
+                  avatar={
+                    <Avatar style={{backgroundColor: "#3DCF5D"}} size={32} icon={<UserOutlined />} />
+                  }
+                  content={
+                    <p>{item.answer.content}</p>
+                  }
+              />
+            )}
           </Comment>
         </>
       )
@@ -53,12 +55,12 @@ const CommentList = ({ comments, handleShowForm, showForm }) => (
 );
 
 const Editor = ({ onChange, onSubmit, submitting, value, isLogin, user}) => (
-  <Form className={styles.formComment}>
-    <Form.Item>
+  <Form onFinish={onSubmit} className={styles.formComment}>
+    <Form.Item name="question">
       <TextArea rows={4} onChange={onChange} value={value} />
     </Form.Item>
     <Form.Item>
-      <Button disabled={!isLogin} htmlType="submit" loading={submitting} onClick={onSubmit} type="primary">
+      <Button disabled={!isLogin} htmlType="submit" loading={submitting} type="primary">
         Preguntar
       </Button>
     </Form.Item>
@@ -74,6 +76,7 @@ const ProductComments = ({product}) => {
 
   useEffect(async () => {
     const data = await getProductQuestions({ id: product.idProducto})
+    console.log(data)
     const tempComments = [...comments]
     if(data.data.length > 0){
       data.data.forEach(q => {
@@ -89,7 +92,7 @@ const ProductComments = ({product}) => {
           answer: {
             author: userResp.correo,
             avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-            content: <p>{q.respuesta}</p>,
+            content: q.respuesta == 'null' ? "" : <p>{q.respuesta}</p>,
           }
         })
       })
@@ -98,18 +101,38 @@ const ProductComments = ({product}) => {
 
   }, [])
 
-  const handleSubmit = () => {
+  const handleSubmit = async (values) => {
     if(isLogin && user.email){
-      const questionData = {
-        usuarioPreg: user.email,
-        pregunta: value,
+      const body = {
+        "producto": {
+          "idProducto": product.idProducto
+        },
+        "pregunta": values.question,
+        "usuarioPreg": {
+            "correo": user.email
+        }
       }
-      setComments([...comments, { 
-        author: user.email,
-        avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-        content: <p>{value}</p>,
-      }])
-      setValue('')
+
+      const resp = await postQuestion(body)
+      if(resp){
+        const tempComments = [...comments]
+        tempComments.push({
+          question: {
+            author: user.email,
+            avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+            content: <p>{values.question}</p>,
+          },
+          answer: {
+            author: "null",
+            avatar: "",
+            content: "null",
+          }
+        })
+        setComments(tempComments)
+        setValue('')
+        setShowForm(false)
+      }
+
     }
   }
 
