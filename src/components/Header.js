@@ -5,10 +5,11 @@ import { Link, useHistory } from 'react-router-dom'
 import logo from '../assets/logo.svg'
 import { UserOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { MarketContext } from '../context'
+import { ROLES } from '../constants'
 
 const Header = () => {
     let history = useHistory()
-    const { user, isLogin, itemsCart, handleLogout } = useContext(MarketContext)
+    const { role, user, isLogin, itemsCart, handleLogout } = useContext(MarketContext)
 
     return (
        <Layout.Header className={styles.container}>
@@ -35,7 +36,7 @@ const Header = () => {
               <Avatar size={38} icon={<UserOutlined />} />
             </Col>
           )}
-          {isLogin && (
+          {isLogin && [ROLES.CLIENT].includes(role) && (
             <Col style={{marginLeft: '30px'}}>
               <Link to="/cart-store" >
                 <Badge count={itemsCart.length}>

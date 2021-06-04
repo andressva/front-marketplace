@@ -2,7 +2,7 @@
   "name": "marketplace",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://3.143.193.234:8080",
+  "proxy": "https://dev-paynet.indexone.com.co:8043",
   "dependencies": {
     "antd": "^4.16.0",
     "axios": "^0.21.1",

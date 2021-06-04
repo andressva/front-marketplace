@@ -1,16 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import { login, getCategories, getStores } from './services'
+import { login, getCategories, getStores, getStoreProducts, deleteProduct } from './services'
 import { ROLES } from './constants'
 import { useLocalStorage } from './hooks/useLocalStorage'
 
 
-const arrRoles = [ ROLES.SUPER, ROLES.ADMIN, ROLES.CLIENT ]
+const Roles = { 
+  "1" : ROLES.SUPER, 
+  "2" : ROLES.ADMIN, 
+  "3" : ROLES.CLIENT 
+}
+
 const MarketContext = React.createContext()
 
 const MarketProvider = (props) => {
   const [ role, setRole ] = useLocalStorage('sesion_role', ROLES.CLIENT)
   const [ user, setUser ] = useLocalStorage('sesion_user', {})
   const [ isLogin, setIsLogin ] = useLocalStorage('sesion_login', false)
+  const [ itemsStore, setItemsStore ] = useLocalStorage('sesion_store_items', [])
   const [ requesting, setRequesting ] = useState(true)
   const [ itemsCart, setItemsCart ] = useLocalStorage('sesion_items_cart', [])
   const [ filters, setFilters ] = useState({ categories: [], stores: [] })
@@ -40,9 +46,20 @@ const MarketProvider = (props) => {
     setRequesting(true)
     return new Promise((resolve, reject) => {
       login({ correo: data.email, clave: data.password })
-        .then((resp) => {
-          const tempRole = arrRoles[resp.data.objResponse.rol]
-          setUser({email: resp.data.objResponse.correo})
+        .then(async (resp) => {
+          const tempRole = Roles[resp.data.objResponse.rol]
+          setUser({
+            email: resp.data.objResponse.correo,
+            idStore: resp.data.objResponse.idTienda,
+            nomStore: resp.data.objResponse.nomTienda,
+            role: resp.data.objResponse.rol
+          })
+          if(resp.data.objResponse.idTienda > 0){
+            const iStr = await getStoreProducts({id: resp.data.objResponse.idTienda })
+            if(iStr.status){
+              setItemsStore(iStr.data)
+            }
+          }
           setIsLogin(true)
           setRole(tempRole)
           setTimeout(() => {
@@ -63,6 +80,7 @@ const MarketProvider = (props) => {
       setUser({})
       setIsLogin(false)
       setRole(ROLES.CLIENT)
+      setItemsStore([])
       setItemsCart([])
       setTimeout(() => {
         setRequesting(false)
@@ -89,6 +107,29 @@ const MarketProvider = (props) => {
     })
   }
 
+  const handleDeleteProduct = ({ id }) => {
+    setRequesting(true)
+    return new Promise(async resolve => {
+      console.log(id)
+      const resp = await deleteProduct({id: id})
+      console.log(resp)
+      await reloadStoreProducts()
+      resolve(true)
+    })
+  }
+
+  const reloadStoreProducts = () => {
+    setRequesting(true)
+    return new Promise(async resolve => {
+      const iStr = await getStoreProducts({id: user.idStore })
+      if(iStr.status){
+        setItemsStore(iStr.data)
+      }
+      setRequesting(false)
+      resolve()
+    })
+  }
+
   const handleFilters = (ftrs) => {
     setFilters({...filters, ...ftrs})
   }
@@ -98,6 +139,7 @@ const MarketProvider = (props) => {
       user,
       role,
       itemsCart,
+      itemsStore,
       categories,
       stores,
       requesting,
@@ -107,7 +149,9 @@ const MarketProvider = (props) => {
       handleLogin,
       handleLogout,
       addItemToCart,
-      removeItemFromCart
+      removeItemFromCart,
+      handleDeleteProduct,
+      reloadStoreProducts
     }}>
       {props.children}
     </MarketContext.Provider>

@@ -43,6 +43,19 @@ export const getProduct = ({id}) => {
   })
 }
 
+export const deleteProduct = ({id}) => {
+  console.log(id)
+  return new Promise((resolve, reject) => {
+    axiosHttp.delete(`/producto/P/${id}`)
+      .then(resp => {
+        resolve({ status: true, data: resp.data.objResponse || {}})
+      })
+      .catch(err => {
+        reject({ status: false, data: err })
+      })
+  })
+}
+
 export const getProductQuestions = ({id}) => {
   return new Promise((resolve, reject) => {
     axiosHttp.get(`/pregunta/${id}`)
@@ -106,6 +119,42 @@ export const postReview = (body) => {
 export const postQuestion = (body) => {
   return new Promise((resolve, reject) => {
     axiosHttp.post(`/pregunta`, body)
+      .then(resp => {
+        resolve({ status: true, data: resp.data.objResponse || {}})
+      })
+      .catch(err => {
+        reject({ status: false, data: err })
+      })
+  })
+}
+
+export const getStoreProducts = ({id}) => {
+  return new Promise((resolve, reject) => {
+    axiosHttp.get(`/producto/T/${id}`)
+      .then(resp => {
+        resolve({ status: true, data: resp.data.objResponse || {}})
+      })
+      .catch(err => {
+        reject({ status: false, data: err })
+      })
+  })
+}
+
+export const registerProduct = (body) => {
+  return new Promise((resolve, reject) => {
+    axiosHttp.post(`/producto`, body)
+      .then(resp => {
+        resolve({ status: true, data: resp.data.objResponse || {}})
+      })
+      .catch(err => {
+        reject({ status: false, data: err })
+      })
+  })
+}
+
+export const editProduct = (body) => {
+  return new Promise((resolve, reject) => {
+    axiosHttp.put(`/producto`, body)
       .then(resp => {
         resolve({ status: true, data: resp.data.objResponse || {}})
       })
