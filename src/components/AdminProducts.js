@@ -63,7 +63,7 @@ const AdminProducts = () => {
                     <Button className={styles.addBtn} type="primary" >
                         <Link to="/products/add">Agregar Producto</Link>
                     </Button>
-                    <Table columns={columns} dataSource={itemsStore || []} pagination={false} />
+                    <Table pagination={{ pageSize: 5 }} columns={columns} dataSource={itemsStore || []} />
                 </Row>
             </Row>
         </Layout.Content>
