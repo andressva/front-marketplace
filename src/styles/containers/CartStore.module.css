@@ -33,3 +33,28 @@
   width: 140px;
   height: 40px;
 }
+
+.checkbox{
+	display: flex;
+	padding: 2px 0;
+  font-size: 1.5em;
+}
+
+.checkbox:nth-child(1){
+	margin-left: 8px;
+}
+
+.checkboxLabel{
+  font-size: 16px;
+}
+
+.successWrap{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.successWrap h1{
+  padding: 30px;
+}

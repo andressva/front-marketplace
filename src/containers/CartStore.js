@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Layout, Row, Table, Button, Modal} from 'antd'
+import { Layout, Row, Table, Button, Modal, Form, Radio, Space} from 'antd'
 import styles from '../styles/containers/CartStore.module.css'
 import { MarketContext } from '../context'
 import { Link, useHistory } from 'react-router-dom'
 import { payment } from '../services/index'
+import successImg from '../assets/successImg.png'
 
 // Components
 import Header from '../components/Header' 
@@ -17,6 +18,7 @@ const CartStore = () => {
   const [ showModal, setShowModal ] = useState(false)
   const [ loading, setLoading ] = useState(false)
   const [ success, setSuccess ] = useState(false)
+  const [ paym, setPaym ] = useState("")
 
   useEffect(() => {
     if(itemsCart.length > 0){
@@ -90,7 +92,7 @@ const CartStore = () => {
     const body = {
         idCompra: 0,
         total: itemsCart.map(i => i.amount * i.product.precio).reduce((a, b) => a + b),
-        metodoPago: "EFECTIVO",
+        metodoPago: paym,
         usuario: {
             correo: user.email
         },
@@ -104,11 +106,14 @@ const CartStore = () => {
           }
         })
     }
+    console.log(body)
     const resp = await payment(body)
+    console.log(resp)
     if(resp.status){
-      setShowModal(false)
       clearCart()
-      history.push('/')
+      setShowModal(false)
+      setSuccess(true)
+      // history.push('/')
     }
   }
 
@@ -122,19 +127,44 @@ const CartStore = () => {
           <Layout.Content className={styles.container}>
             <Row className={styles.content}>
             {showModal && (
-              <Modal okText="Realizar Pago" title="Basic Modal" visible={showModal} onOk={handleOk} onCancel={handleCancel}>
-                <p>Metodo de Pago</p>
+              <Modal okText="Realizar Pago" title="Seleccione metodo de pago" visible={showModal} onOk={handleOk} onCancel={handleCancel}>
+                <Form
+                  initialValues={{ payMethod: "EFECTIVO" }}
+                  name="basic"
+                >
+                  <Form.Item
+                    name="payMethod"
+                  >
+                    <Radio.Group onChange={(value) => { setPaym(value.target.value) }} value="EFECTIVO">
+                      <Space direction="vertical">
+                        <Radio value="EFECTIVO"><span className={styles.checkboxLabel} >Efectivo</span></Radio>
+                        <Radio value="TARJETA DE CREDITO"><span className={styles.checkboxLabel} >Tarjeta de Credito</span></Radio>
+                        <Radio value="PSE"><span className={styles.checkboxLabel} >PSE</span></Radio>
+                      </Space>
+                    </Radio.Group>
+                  </Form.Item>
+                </Form>
               </Modal>
             )}
               {loading ? (
                 <h1>Cargando...</h1>
               ) : (
                 <>
-                <Table columns={columns} dataSource={displayData} pagination={false} />
-                <Row className={styles.totalWrap}>
-                  <h1>Total: <span className={styles.total}>${ itemsCart.length > 0 ? itemsCart.map(i => i.amount * i.product.precio).reduce((a, b) => a+b) : 0 }</span></h1>
-                  {itemsCart.length > 0 && ( <Button onClick={() => setShowModal(true)} className={styles.payButton} type="primary" >Pagar</Button> )}
-                </Row>
+                {success && (
+                  <div className={styles.successWrap}>
+                  <h1>PAGO EXITOSO!</h1>
+                  <img className="animate__animated animate__shakeY animate__repeat-5" width="200" src={successImg} />
+                  </div>
+                )}
+                {!success && (
+                  <>
+                  <Table columns={columns} dataSource={displayData} pagination={false} />
+                  <Row className={styles.totalWrap}>
+                    <h1>Total: <span className={styles.total}>${ itemsCart.length > 0 ? itemsCart.map(i => i.amount * i.product.precio).reduce((a, b) => a+b) : 0 }</span></h1>
+                    {itemsCart.length > 0 && ( <Button onClick={() => setShowModal(true)} className={styles.payButton} type="primary" >Pagar</Button> )}
+                  </Row>
+                  </>
+                ) }
                 </>
               )}
             </Row>
