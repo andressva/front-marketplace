@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Card, List, Checkbox } from 'antd'
+import { Card, List, Checkbox, Form, Input, Button } from 'antd'
 import styles from '../styles/components/Filters.module.css'
 import { getCategories, getStores } from '../services/index'
 import { MarketContext } from '../context'
@@ -14,6 +14,12 @@ const Filters = () => {
   const handleStoresChange = (value) => {
     handleFilters({ stores: value })
   }
+
+  const handleSubmitKeyword = (value) => {
+    const keyword = value || ""
+    handleFilters({ keyword: keyword })
+  }
+
   return (
     <div className={styles.contentFilter}>
       <Card
@@ -23,6 +29,17 @@ const Filters = () => {
         }}
       >
         <div className={styles.itemFilter}>
+          <p>Busqueda</p>
+          <Form
+            name="basic"
+          >
+            <Form.Item
+              label=""
+              name="keyword"
+            >
+              <Input.Search placeholder="ej: Billetera" onSearch={handleSubmitKeyword} enterButton />
+            </Form.Item>
+          </Form>
           <p>Categorias</p>
           <Checkbox.Group
             onChange={handleCategoriesChange}

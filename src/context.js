@@ -19,7 +19,7 @@ const MarketProvider = (props) => {
   const [ itemsStore, setItemsStore ] = useLocalStorage('sesion_store_items', [])
   const [ requesting, setRequesting ] = useState(true)
   const [ itemsCart, setItemsCart ] = useLocalStorage('sesion_items_cart', [])
-  const [ filters, setFilters ] = useState({ categories: [], stores: [] })
+  const [ filters, setFilters ] = useState({ categories: [], stores: [], keyword:"" })
   const [ categories, setCategories ] = useState([])
   const [ stores, setStores ] = useState([])
 
@@ -130,6 +130,10 @@ const MarketProvider = (props) => {
     })
   }
 
+  const clearCart = () => {
+    setItemsCart([])
+  }
+
   const handleFilters = (ftrs) => {
     setFilters({...filters, ...ftrs})
   }
@@ -151,7 +155,8 @@ const MarketProvider = (props) => {
       addItemToCart,
       removeItemFromCart,
       handleDeleteProduct,
-      reloadStoreProducts
+      reloadStoreProducts,
+      clearCart
     }}>
       {props.children}
     </MarketContext.Provider>

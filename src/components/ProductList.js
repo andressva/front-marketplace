@@ -46,7 +46,8 @@ const ProductList = () => {
           dataSource={products.filter(p => {
             return filters ? 
               (filters.categories.length > 0 ? filters.categories.includes(p.idCategoria) : true) &&
-              (filters.stores.length > 0 ? filters.stores.includes(p.idTienda) : true) 
+              (filters.stores.length > 0 ? filters.stores.includes(p.idTienda) : true) && 
+              (filters.keyword != "" ? p.nombre.toLowerCase().includes(filters.keyword.toLowerCase()) : true  )
             : true   
           })}
           renderItem={item => (

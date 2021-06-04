@@ -1,20 +1,24 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Layout, Row, Table, Button} from 'antd'
+import { Layout, Row, Table, Button, Modal} from 'antd'
 import styles from '../styles/containers/CartStore.module.css'
 import { MarketContext } from '../context'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
+import { payment } from '../services/index'
 
 // Components
 import Header from '../components/Header' 
 import Footer from '../components/Footer' 
+import { responsiveArray } from 'antd/lib/_util/responsiveObserve'
 
 const CartStore = () => {
-  const { itemsCart, stores, removeItemFromCart } = useContext(MarketContext)
+  const history = useHistory()
+  const { user, itemsCart, stores, removeItemFromCart, clearCart } = useContext(MarketContext)
   const [ displayData, setDisplayData ] = useState([])
+  const [ showModal, setShowModal ] = useState(false)
   const [ loading, setLoading ] = useState(false)
+  const [ success, setSuccess ] = useState(false)
 
   useEffect(() => {
-    console.log(itemsCart)
     if(itemsCart.length > 0){
       setLoading(true)
       const tempData = itemsCart.map((i, idx) => {
@@ -82,11 +86,46 @@ const CartStore = () => {
     },
   ];
 
+  const handleOk = async () => {
+    const body = {
+        idCompra: 0,
+        total: itemsCart.map(i => i.amount * i.product.precio).reduce((a, b) => a + b),
+        metodoPago: "EFECTIVO",
+        usuario: {
+            correo: user.email
+        },
+        detCompra: itemsCart.map(i => {
+          return {
+            producto: {
+              idProducto: i.product.idProducto
+            },
+            cantidad: i.amount,
+            precio: i.product.precio
+          }
+        })
+    }
+    const resp = await payment(body)
+    if(resp.status){
+      setShowModal(false)
+      clearCart()
+      history.push('/')
+    }
+  }
+
+  const handleCancel = () => {
+    setShowModal(false)
+  }
+
   return (
       <Layout style={{height: '100vh'}}>
           <Header/>
           <Layout.Content className={styles.container}>
             <Row className={styles.content}>
+            {showModal && (
+              <Modal okText="Realizar Pago" title="Basic Modal" visible={showModal} onOk={handleOk} onCancel={handleCancel}>
+                <p>Metodo de Pago</p>
+              </Modal>
+            )}
               {loading ? (
                 <h1>Cargando...</h1>
               ) : (
@@ -94,7 +133,7 @@ const CartStore = () => {
                 <Table columns={columns} dataSource={displayData} pagination={false} />
                 <Row className={styles.totalWrap}>
                   <h1>Total: <span className={styles.total}>${ itemsCart.length > 0 ? itemsCart.map(i => i.amount * i.product.precio).reduce((a, b) => a+b) : 0 }</span></h1>
-                  {itemsCart.length > 0 && ( <Button className={styles.payButton} type="primary" >Pagar</Button> )}
+                  {itemsCart.length > 0 && ( <Button onClick={() => setShowModal(true)} className={styles.payButton} type="primary" >Pagar</Button> )}
                 </Row>
                 </>
               )}
